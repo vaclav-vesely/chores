@@ -2,6 +2,7 @@
 
 ## TODO
 
+- Deploy to Firebase
 - I can login
     - https://firebase.google.com/docs/auth/flutter/start
 - I can record new chore (garbage)

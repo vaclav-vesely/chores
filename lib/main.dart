@@ -34,9 +34,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chores'),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Chores'),
+        ),
+        body: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Text('0.0.1'),
+          ),
+        ));
   }
 }

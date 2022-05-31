@@ -46,12 +46,29 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingPage();
+        } else if (snapshot.hasData) {
           return const HomePage();
         } else {
           return const LoginPage();
         }
       },
+    );
+  }
+}
+
+class LoadingPage extends StatelessWidget {
+  const LoadingPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text("Loading..."),
+      ),
     );
   }
 }
@@ -74,19 +91,16 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Chores'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
+        body: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(FirebaseAuth.instance.currentUser?.displayName ?? 'Unknown'),
               ElevatedButton(
-                onPressed: FirebaseAuth.instance.signOut,
+                onPressed: FirebaseAuth.instance.signOut, // TODO: Handle errors
                 child: const Text('Sign out'),
               ),
-              const Align(
-                alignment: Alignment.bottomRight,
-                child: Text('0.0.1'),
-              ),
+              const Text('0.0.1'),
             ],
           ),
         ));

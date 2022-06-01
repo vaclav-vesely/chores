@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'auth_model.dart';
 import 'home_page.dart';
 import 'loading_page.dart';
 import 'login_page.dart';
@@ -12,17 +13,20 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LoadingPage();
-        } else if (snapshot.hasData) {
-          return const HomePage();
-        } else {
-          return const LoginPage();
-        }
-      },
+    return ChangeNotifierProvider(
+      create: (_) => AuthModel(),
+      child: Consumer<AuthModel>(
+        builder: (context, auth, child) {
+          switch (auth.state) {
+            case AuthState.initializing:
+              return const LoadingPage();
+            case AuthState.unauthenticated:
+              return const LoginPage();
+            case AuthState.authenticated:
+              return const HomePage();
+          }
+        },
+      ),
     );
   }
 }
